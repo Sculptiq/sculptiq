@@ -1,0 +1,94 @@
+name: New printer connector
+description: Propose a connector for a printer family that Sculptiq cannot reach yet.
+title: "[connector] <printer family>"
+labels: ["connector", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping open up Sculptiq to more printers.
+        Please read `docs/connector-program/CONNECTOR-SPEC.md` and
+        `docs/connector-program/CONTRIBUTING.md` before filing.
+        Open this issue **before** writing code so nobody duplicates your work.
+
+  - type: input
+    id: family
+    attributes:
+      label: Printer family
+      description: Brand and models this connector targets.
+      placeholder: "Prusa MK4 / MK3.9 (PrusaLink 2.x)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: transport
+    attributes:
+      label: Transport
+      description: How the connector reaches the device. Browser tabs can only do plain HTTP(S).
+      options:
+        - http
+        - https-lan
+        - mqtt-bridge (needs a local bridge — see ISSUE-bambu-lan.md)
+        - something else (explain below)
+    validations:
+      required: true
+
+  - type: input
+    id: auth
+    attributes:
+      label: Auth model
+      description: Single header name the key travels in, or "none".
+      placeholder: "X-Api-Key"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: capabilities
+    attributes:
+      label: Capabilities you intend to implement
+      description: Only tick what you will actually implement. Everything else must throw Unsupported.
+      options:
+        - label: test (verify the connection, return name + version)
+        - label: status (normalised PrinterStatus)
+        - label: upload (send G-code, optional autostart)
+        - label: command (pause / resume / cancel)
+
+  - type: textarea
+    id: api
+    attributes:
+      label: API documentation
+      description: Links to the printer's HTTP API docs, or the endpoints you reverse-engineered.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: hardware
+    attributes:
+      label: Test hardware
+      description: We cannot merge a connector nobody can verify against a real machine.
+      options:
+        - I own the printer and can test every capability
+        - I own the printer but only for some capabilities
+        - I have occasional access to the printer
+        - No hardware — spec/API contribution only
+    validations:
+      required: true
+
+  - type: input
+    id: bbud
+    attributes:
+      label: BBUD handle
+      description: Your handle on bbud.dev, used for reward attribution (Cortex Points).
+      placeholder: "@yourhandle"
+
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: Ground rules
+      options:
+        - label: All network calls will go through `guardedFetch` — no bare `fetch`.
+          required: true
+        - label: No new npm dependencies.
+          required: true
+        - label: I will add tests and pass the conformance harness.
+          required: true
